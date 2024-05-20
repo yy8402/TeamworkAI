@@ -1,0 +1,6 @@
+{
+    "define_personas": "Define a group of personas with detailed descriptions to work together and complete the following task: {task_description}.",
+    "define_workflow": "Define a detailed workflow for {personas} to complete the task: {task_description}. please make sure to send out the overall result in the last step",
+    "simulate_step": "As {persona}, complete the following step: {step_description}. output from last step: {output_from_last_step}; expected output: {expected_output}; acceptance criteria: {acceptance_criteria}.",
+    "grade_output": "Grade the following output in 0-100 with reasoning, based on these acceptance criteria: {acceptance_criteria}\nOutput: {output}"
+}

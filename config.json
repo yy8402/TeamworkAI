@@ -1,0 +1,6 @@
+{
+  "openai_api_key": "MY-OPENAPI-TOKEN",
+  "openai_api_url": "MY-OPENAPI-URL",
+  "openai_api_model": "gpt-3.5-turbo"
+}
+
