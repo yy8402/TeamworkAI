@@ -1,6 +1,12 @@
 {
-  "openai_api_key": "MY-OPENAPI-TOKEN",
-  "openai_api_url": "MY-OPENAPI-URL",
-  "openai_api_model": "gpt-3.5-turbo"
+  "openai": {
+    "api_key": "MY-OPENAPI-TOKEN",
+    "api_url": "MY-OPENAPI-URL",
+    "api_model": "gpt-3.5-turbo"
+  },
+  "gemini": {
+    "api_key": "MY-GEMINI-TOKEN",
+    "api_url": "MY-GEMINI-URL",
+    "api_model": "gemini-pro"
+  }
 }
-
