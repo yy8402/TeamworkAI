@@ -1,0 +1,33 @@
+<!-- step3.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Step 3</title>
+</head>
+<body>
+    <h1>Step 3: Edit Workflow</h1>
+    <form method="POST">
+        <table id="tableWorkflow">
+            <thead>
+            <tr>
+            <th>Description</th>
+            <th>Assignee</th>
+            <th>Expected Output</th>
+            <th>Acceptance Criteria</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for step in workflow %}
+            <tr>
+            <td><input type="text" name="description" value="{{ step.description }}"></td>
+            <td><input type="text" name="assignee" value="{{ step.assignee }}"></td>
+            <td><input type="text" name="expected_output" value="{{ step.expected_output }}"></td>
+            <td><input type="text" name="acceptance_criteria" value="{{ step.acceptance_criteria }}"></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>

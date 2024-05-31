@@ -1,0 +1,33 @@
+<!-- step2.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Step 2</title>
+</head>
+<body>
+    <h1>Step 2: Edit Personas</h1>
+    <form method="POST">
+        <table id="tablePersona">
+            <thead>
+            <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Skills</th>
+            <th>Role</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for persona in personas %}
+            <tr>
+            <td><input type="text" name="description" value="{{ persona.name }}"></td>
+            <td><input type="text" name="description" value="{{ persona.description }}"></td>
+            <td><input type="text" name="description" value="{{ persona.skills }}"></td>
+            <td><input type="text" name="description" value="{{ persona.role }}"></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>

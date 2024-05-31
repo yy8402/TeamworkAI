@@ -1,0 +1,17 @@
+<!-- result.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Outputs</title>
+</head>
+<body>
+    <h1>Step {{ current_step }} / {{ total_steps }} </h1>
+    <h3>{{ step_description }}</h3>
+    <p>{{ result }}</p>
+    <h2>Grade: {{ grade_num }}</h2>
+    <p>Reasoning: {{ grade_reasoning }} </p>
+    <form method="POST", id="Next">
+        <input type="submit" value="Next">
+    </form>
+</body>
+</html>
