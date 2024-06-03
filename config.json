@@ -8,5 +8,9 @@
     "api_key": "MY-GEMINI-TOKEN",
     "api_url": "MY-GEMINI-URL",
     "api_model": "gemini-pro"
+  },
+  "logging": {
+    "llm_prompt": true,
+    "llm_response": true
   }
 }

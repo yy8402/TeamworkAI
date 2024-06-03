@@ -10,6 +10,7 @@
 
 import requests
 import json
+from datetime import datetime
 
 with open('config.json', 'r') as file:
     config = json.load(file)
@@ -17,6 +18,20 @@ with open('config.json', 'r') as file:
 BASE_URL = config['gemini']['api_url']
 API_KEY = config['gemini']['api_key']
 GEMINI_MODEL = config['gemini']['api_model']
+
+LOG_LLM_PROMPT = config['logging']['llm_prompt']
+LOG_LLM_RESPONSE = config['logging']['llm_response']
+
+def log_llm(message, type="prompt"):
+    if not LOG_LLM_PROMPT and not LOG_LLM_RESPONSE:
+        return True
+    
+    with open('logs/gemini.log', 'a') as file:
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        log_message = f"{timestamp} {type}: {message}"
+        file.write(log_message + "\n")
+        
+    return True
 
 def generate_content(prompt, model = GEMINI_MODEL):
     headers = {
@@ -35,8 +50,11 @@ def generate_content(prompt, model = GEMINI_MODEL):
     }
 
     api_url = f"{BASE_URL}/v1beta/models/{model}:generateContent?key={API_KEY}"
-    print (api_url)
+    log_llm(json.dumps(data))
+
     response = requests.post(api_url, headers=headers, json=data)
+    # dump the raw content of response to log file
+    log_llm(f"json.dumps(response.json)", type="response")
 
     if response.status_code != 200:
         print(f"Error: {response.status_code}")
