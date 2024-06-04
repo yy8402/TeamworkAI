@@ -13,6 +13,53 @@ with open('prompt_templates.json', 'r') as file:
 with open('output_examples.json', 'r') as file:
     output_examples = json.load(file)
 
+def validate_persona(persona):
+    if 'name' not in persona:
+        logging.error(f"name not in persona, persona: {persona}")
+        return False
+    if 'role' not in persona:
+        logging.error(f"role not in persona, persona: {persona}")
+        return False
+    if 'description' not in persona:
+        logging.error(f"description not in persona, persona: {persona}")
+        return False
+    if 'skills' not in persona:
+        logging.error(f"skills not in persona, persona: {persona}")
+        return False
+
+    return True
+
+def validate_step(step):
+    if 'description' not in step:
+        logging.error(f"description not in step, step: {step}")
+        return False
+    if 'assignee' not in step:
+        logging.error(f"assignee not in step, step: {step}")
+        return False
+    if 'expected_output' not in step:
+        logging.error(f"expected_output not in step, step: {step}")
+        return False
+    if 'acceptance_criteria' not in step:
+        logging.error(f"acceptance_criteria not in step, step: {step}")
+        return False
+
+    return True
+
+def validate_examples():
+    # persona keys: name, role, description, skills
+    personas_example = output_examples['define_personas']
+    for persona in personas_example:
+        if not validate_persona(persona):
+            return False
+    # workflow/step keys: description, assignee, expected_output, acceptance_criteria
+    workflow_example = output_examples['define_workflow']
+    for step in workflow_example:
+        if not validate_step(step):
+            return False
+    # grade keys: grade, reasoning
+
+    return True
+
 def api_request(prompt, llm_mode = "gpt-3.5-turbo"):
     if llm_mode == "gpt-3.5-turbo":
         logging.debug(f"Prompt: \n\n {prompt}\n")
