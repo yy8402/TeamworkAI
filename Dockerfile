@@ -16,4 +16,4 @@ ADD . .
 EXPOSE 5000
 
 # Run service.py when the container launches
-CMD ["python", "service.py"]
+CMD ["python", "app.py"]

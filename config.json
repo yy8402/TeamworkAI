@@ -12,5 +12,11 @@
   "logging": {
     "llm_prompt": true,
     "llm_response": true
+  },
+  "postgresql": {
+    "dbhost": "session-database",
+    "dbname": "session_db",
+    "user": "postgres",
+    "password": "supra"
   }
 }

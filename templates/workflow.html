@@ -1,18 +1,18 @@
-<!-- step3.html -->
-<!DOCTYPE html>
 <html>
 <head>
-    <title>Step 3</title>
+    <title>Workflow</title>
 </head>
 <body>
-    <h1>Step 3: Edit Workflow</h1>
+    <h1>Edit Workflow</h1>
     <form method="POST">
+        <input type="hidden" name="action" value="update">
         <table id="tableWorkflow">
             <thead>
             <tr>
             <th>Description</th>
             <th>Assignee</th>
-            <th>Expected Output</th>
+            <th>Expected Output: Description</th>
+            <th>Expected Output: Example</th>
             <th>Acceptance Criteria</th>
             </tr>
             </thead>
@@ -21,13 +21,18 @@
             <tr>
             <td><input type="text" name="description" value="{{ step.description }}"></td>
             <td><input type="text" name="assignee" value="{{ step.assignee }}"></td>
-            <td><input type="text" name="expected_output" value="{{ step.expected_output }}"></td>
+            <td><input type="text" name="expected_output_description" value="{{ step.expected_output_description }}"></td>
+            <td><input type="text" name="expected_output_example" value="{{ step.expected_output_example }}"></td>
             <td><input type="text" name="acceptance_criteria" value="{{ step.acceptance_criteria }}"></td>
             </tr>
             {% endfor %}
             </tbody>
         </table>
         <input type="submit" value="Submit">
+    </form>
+    <form method="POST">
+        <input type="hidden" name="action" value="next_stage">
+        <input type="submit" value="Next Stage">
     </form>
 </body>
 </html>

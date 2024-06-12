@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+    ai-agent:
+        image: ai-agent
+        ports:
+            - 3000:3000
+    session-database:
+        image: postgres:14-alpine
+        environment:
+            - POSTGRES_PASSWORD=supra

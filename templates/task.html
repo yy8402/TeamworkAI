@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task</title>
+</head>
+<body>
+    <h1>Enter Task</h1>
+    <form method="POST">
+        <input type="hidden" name="action" value="update">
+        <input type="text" id="task" name="task" style="width: 50%;" value="{{ task }}"><br>
+        <input type="submit" value="Update">
+    </form>
+    <form method="POST">
+        <input type="hidden" name="action" value="next_stage">
+        <input type="submit" value="Next Stage">
+    </form>
+</body>
+</html>

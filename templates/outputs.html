@@ -1,4 +1,3 @@
-<!-- result.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,7 +10,8 @@
     <h2>Grade: {{ grade_num }}</h2>
     <p>Reasoning: {{ grade_reasoning }} </p>
     <form method="POST", id="Next">
-        <input type="submit" value="Next">
+        <input type="hidden" name="action" value="next_step">
+        <input type="submit" value="Next Step">
     </form>
 </body>
 </html>

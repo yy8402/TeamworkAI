@@ -1,12 +1,12 @@
-<!-- step2.html -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Step 2</title>
+    <title>Personas</title>
 </head>
 <body>
-    <h1>Step 2: Edit Personas</h1>
+    <h1>Edit Personas</h1>
     <form method="POST">
+        <input type="hidden" name="action" value="update">
         <table id="tablePersona">
             <thead>
             <tr>
@@ -27,7 +27,11 @@
             {% endfor %}
             </tbody>
         </table>
-        <input type="submit" value="Submit">
+        <input type="submit" value="Update">
+    </form>
+    <form method="POST">
+        <input type="hidden" name="action" value="next_stage">
+        <input type="submit" value="Next Stage">
     </form>
 </body>
 </html>
