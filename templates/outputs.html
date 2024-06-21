@@ -4,11 +4,33 @@
     <title>Outputs</title>
 </head>
 <body>
-    <h1>Step {{ current_step }} / {{ total_steps }} </h1>
-    <h3>{{ step_description }}</h3>
-    <p>{{ result }}</p>
-    <h2>Grade: {{ grade_num }}</h2>
-    <p>Reasoning: {{ grade_reasoning }} </p>
+    <h1>Step {{ step_count }} / {{ total_steps }} </h1>
+    <form method="POST", id="UpdateStep">
+        <input type="hidden" name="action" value="update_step">
+        <input type="hidden" name="step_count" value="{{ step_count }}">
+        <p>Description</p>
+        <input type="text" name="step_description" value="{{ step.description }}" >
+        <p>Output Description</p>
+        <input type="text" name="step_expected_output_description" value="{{ step.expected_output_description }}" >
+        <p>Output Example</p>
+        <input type="text" name="step_expected_output_example" value="{{ step.expected_output_example }}" >
+        <p>Acceptance Criteria</p>
+        <input type="text" name="step_acceptance_criteria" value="{{ step.acceptance_criteria }}" >
+        <p><input type="submit" value="Update">
+        </p>
+    </form>
+    <form method="POST", id="retry">
+        <input type="hidden" name="action" value="retry_step">
+        <input type="submit" value="Retry">
+    </form>
+    <p>{{ step.output }}</p>
+    <h2>Grade: {{ step.grade.grade }}</h2> 
+    <form method="POST", id="regrade">
+        <input type="hidden" name="step_count" value="{{ step_count }}">
+        <input type="hidden" name="action" value="regrade">
+        <input type="submit" value="Regrade">
+    </form>   
+    <p>Reasoning: {{ step.grade.reasoning }} </p>
     <form method="POST", id="Next">
         <input type="hidden" name="action" value="next_step">
         <input type="submit" value="Next Step">

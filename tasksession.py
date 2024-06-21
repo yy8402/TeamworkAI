@@ -158,3 +158,17 @@ def update_step(working_session, step_index, step_info):
         "message": return_message,
         "session": working_session
         }
+
+def update_step_grade(working_session, step_index, grade):
+    return_status = 'failed'
+    return_message = 'step not found'
+
+    workflow = working_session['workflow']
+    if step_index < len(workflow):
+        step_info = workflow[step_index]
+        step_info['grade'] = grade
+    return {
+        "status": return_status, 
+        "message": return_message,
+        "session": working_session
+        }

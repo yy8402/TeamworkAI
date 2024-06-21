@@ -102,20 +102,19 @@ def db_update_session(working_session):
         logging.error(f"Error updating session in database: {str(e)}")
         return False
 
-def reset_workflow(working_session):
-    working_session['outputs'] = []
-    working_session['grades'] = [] 
-    working_session['current_step'] = 0
-    return working_session
-
 def render_final_result(working_session):
-    result = working_session['outputs'][-1]
-    grade = working_session['grades'][-1]
+    result = working_session['workflow'][-1]['output']
+    grade = working_session['workflow'][-1]['grades']
     return render_template('result.html', result=result, grade=grade)
+
+def grade_step(step):
+    #TODO: validate grade result
+    return teamwork.grade_output(step['output'], step['acceptance_criteria'])
 
 def simulate_step(personas, step, last_output):
     step_description = step['description']    
     expected_output = step['expected_output_example']
+    # expected_output_description = step['expected_output_description']
     acceptance_criteria = step['acceptance_criteria']
 
     assignee_name = step['assignee']
@@ -129,7 +128,7 @@ def simulate_step(personas, step, last_output):
     if assignee_role is None:
         raise ValueError("Persona not found in session")
     
-    output = teamwork.simulate_step(
+    step['output'] = teamwork.simulate_step(
         step_description,
         assignee_name,
         assignee_role,
@@ -139,30 +138,40 @@ def simulate_step(personas, step, last_output):
         acceptance_criteria
     )
     
-    grade = teamwork.grade_output(output, acceptance_criteria)
-    return output, grade
+    step['grade'] = grade_step(step)
+    return step
+
+def get_step_index(current_step, retry):
+    if retry:
+        return current_step - 1
+    else:
+        return current_step
 
 def handle_workflow(working_session):
     workflow = working_session.get('workflow')
-    step_index = 0
-    if 'current_step' not in working_session:
-        working_session = reset_workflow(working_session)
+    current_step = working_session.get('current_step')
+    if not current_step:
+        working_session['current_step'] = 0
+        current_step = 0
         output_last_step = None
-    else:
-        step_index = working_session['current_step']
-        output_last_step = working_session['outputs'][-1]
-
-    logging.debug(f"Handling workflow step: {step_index}, workflow: {workflow}, session: {working_session}")
-    if step_index == len(workflow):
+    elif current_step == 0:
+        output_last_step = None
+    elif current_step == len(workflow) - 1 :
         return render_final_result(working_session)
+    else:
+        output_last_step = workflow[current_step - 1]['output']  
 
-    this_step = workflow[step_index]
-    personas = working_session['personas']
-    step_output, step_grade = simulate_step(personas, this_step, output_last_step)
+    logging.debug(f"Handling workflow step: {current_step}, workflow: {workflow}, session: {working_session}")
+
+    this_step = workflow[current_step]
+    this_step = simulate_step(working_session['personas'], this_step, output_last_step)
+    logging.debug(f"Simulated step: {this_step}")
+
+    # update session with update step including output and grade
     #TODO: validate step_output and step_grade
-    step_count = step_index + 1
-    working_session['outputs'].append(step_output)
-    working_session['grades'].append(step_grade)
+    workflow[current_step] = this_step
+    working_session['workflow'] = workflow
+    step_count = current_step + 1
     working_session['current_step'] = step_count
 
     if db_update_session(working_session):
@@ -171,12 +180,9 @@ def handle_workflow(working_session):
         logging.error(f"Error updating session with step {step_count}")
 
     return render_template('outputs.html', 
-                           current_step=step_count, 
+                           step_count=step_count,
                            total_steps=len(workflow), 
-                           step_description=this_step['description'], 
-                           result=step_output, 
-                           grade_num=step_grade['grade'], 
-                           grade_reasoning=step_grade['reasoning'])
+                           step=this_step)
 
 def get_session_info():
     if 'id' not in session:
@@ -225,9 +231,23 @@ def update_session(working_session, request_form):
                                                    request_form.get('update_persona'), 
                                                    request_form.get('persona_info'))
     elif 'update_step' in request_form:
+        step_index = request_form.get('step_count') - 1
+        step_info = working_session['workflow'][step_index]
+        step_info['description'] = request_form.get('step_description')
+        step_info['expected_output_description'] = request_form.get('step_expected_output_description')
+        step_info['expected_output_example'] = request_form.get('step_expected_output_example')
+        step_info['acceptance_criteria'] = request_form.get('step_acceptance_criteria')
         result_update = tasksession.update_step(working_session, 
-                                                request_form.get('update_step'), 
-                                                request_form.get('step_info'))
+                                                step_index=step_index, 
+                                                step_info=step_info)
+        if result_update['status'] == 'success':
+            working_session = result_update['session']
+    elif 'regrade' in request_form:
+        step_index = request_form.get('step_count') - 1
+        new_grade = grade_step(working_session['workflow'][step_index])
+        result_update = tasksession.update_step_grade(working_session, 
+                                                      step_index, 
+                                                      new_grade)
     else:
         logging.debug("No update action specified")
         return working_session
@@ -291,6 +311,9 @@ def handle_update(working_session, request_form):
     if action == 'next_stage':
         return move_to_next_stage(working_session, request_form)
     elif action == 'next_step': 
+        return handle_workflow(working_session)
+    elif action == 'retry_step' or action == 'regrade':
+        working_session['current_step'] = working_session['current_step'] -1   
         return handle_workflow(working_session)
     elif action == 'update':
         working_session = update_session(working_session, request_form)
