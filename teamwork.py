@@ -133,7 +133,7 @@ def simulate_step(step_description,
                   assignee_name, 
                   assignee_role, 
                   assignee_description, 
-                  output_from_last_step, 
+                  step_input, 
                   expected_output, 
                   acceptance_criteria):
     prompt_variables = {
@@ -141,7 +141,7 @@ def simulate_step(step_description,
         "assignee_role": assignee_role,
         "assignee_description": assignee_description,
         "step_description": step_description,
-        "output_from_last_step": output_from_last_step,
+        "step_input": step_input,
         "expected_output": expected_output,
         "acceptance_criteria": acceptance_criteria
     }

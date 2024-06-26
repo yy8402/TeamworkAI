@@ -111,7 +111,7 @@ def grade_step(step):
     #TODO: validate grade result
     return teamwork.grade_output(step['output'], step['acceptance_criteria'])
 
-def simulate_step(personas, step, last_output):
+def simulate_step(personas, step):
     step_description = step['description']    
     expected_output = step['expected_output_example']
     # expected_output_description = step['expected_output_description']
@@ -133,7 +133,7 @@ def simulate_step(personas, step, last_output):
         assignee_name,
         assignee_role,
         assignee_description,
-        last_output,
+        step['input'],
         expected_output,
         acceptance_criteria
     )
@@ -164,7 +164,8 @@ def handle_workflow(working_session):
     logging.debug(f"Handling workflow step: {current_step}, workflow: {workflow}, session: {working_session}")
 
     this_step = workflow[current_step]
-    this_step = simulate_step(working_session['personas'], this_step, output_last_step)
+    this_step['input'] = output_last_step
+    this_step = simulate_step(working_session['personas'], this_step)
     logging.debug(f"Simulated step: {this_step}")
 
     # update session with update step including output and grade
